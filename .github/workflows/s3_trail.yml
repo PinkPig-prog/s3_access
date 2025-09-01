@@ -1,15 +1,18 @@
-name: Upload Folder to S3
+name: Upload Models to S3
 
 on:
   push:
     branches:
-      - main
+      - main  
+    paths:
+      - "models/**" 
 
 jobs:
-  upload-to-s3:
+  upload:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Configure AWS credentials
@@ -17,8 +20,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1   # change to your region
+          aws-region: us-east-1   
 
-      - name: Upload folder to S3
+      - name: Upload models folder to S3
         run: |
-          aws s3 sync ./my-folder s3://my-s3-bucket-name/my-prefix/ --delete
+          aws s3 cp models s3://noideabro/models --recursive
